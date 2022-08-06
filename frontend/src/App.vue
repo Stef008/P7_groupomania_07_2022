@@ -1,11 +1,17 @@
-<script setup>
-import loginVue from "./pages/login.vue";
+<script>
+import Navbar from "./components/navbar.vue"
+
+export default {
+  name:"App",
+  components:{
+    Navbar,
+  }
+}
 </script>
-
 <template>
-  <h1>Groupomania</h1>
-  <router-view />
-
+<Navbar/>
+<router-view/> 
 </template>
 
 <style></style>
+
