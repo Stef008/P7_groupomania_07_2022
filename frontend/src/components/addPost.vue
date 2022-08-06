@@ -29,8 +29,8 @@ export default {
     color: #a0a0a0;
 }
 hr {
-    border-bottom: 1px solid #FD2D01; 
-    box-shadow: 0px 3px 13px 2px #FD2D01;
+    border-bottom: 1px solid #fd2d0161; 
+    box-shadow: 0px 5px 15px 1px #FD2D01;
 }
 label{
     display: grid;
