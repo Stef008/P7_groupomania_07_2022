@@ -4,7 +4,8 @@ import loginVue from "./pages/login.vue";
 
 <template>
   <h1>Groupomania</h1>
-  <login-vue />
+  <router-view />
+
 </template>
 
 <style></style>
