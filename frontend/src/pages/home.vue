@@ -1,10 +1,12 @@
 <script>
 import AddPost from "../components/addPost.vue";
+import Post from "../components/post.vue";
 
 export default {
     name: "HomeVue",
     components: {
-        AddPost
+        AddPost,
+        Post
     },
 }
 </script>
@@ -15,6 +17,9 @@ export default {
             </div>
         </div>
         <AddPost/>
+        <Post/>
+        <post/>
+        <post/>
     </div>  
 </template>
 

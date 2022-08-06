@@ -45,9 +45,6 @@ export default {
 </template>
 
 <style>
-body {
-  height: 100%;
-}
 
 body {
   align-items: center;

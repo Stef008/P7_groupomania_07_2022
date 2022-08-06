@@ -13,5 +13,11 @@ export default {
 <router-view/> 
 </template>
 
-<style></style>
+<style>
+#app{
+  /* background-color:  #4E5166; */
+    /* background-color:  #FFD7D7; */
+background-color: #f5f5f5;
+}
+</style>
 
