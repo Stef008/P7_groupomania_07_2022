@@ -1,12 +1,12 @@
 <script>
 import AddPost from "../components/addPost.vue";
-import Post from "../components/post.vue";
+import Card from "../layouts/card.vue";
 
 export default {
     name: "HomeVue",
     components: {
         AddPost,
-        Post
+        Card
     },
 }
 </script>
@@ -17,13 +17,16 @@ export default {
             </div>
         </div>
         <AddPost/>
-        <Post/>
-        <post/>
-        <post/>
+        <Card/>
+        <Card/>
+        <Card/>
     </div>  
 </template>
 
 <style scoped>
+.container-lg {
+    width: 75%
+}
 h1 {
     font-size: 1.2rem;
     font-weight: bold;
