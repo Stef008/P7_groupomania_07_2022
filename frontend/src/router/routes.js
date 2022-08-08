@@ -18,8 +18,9 @@ router.beforeEach((to, from) => {
     }
 })
 function needConnect(to) {
-    if (privatePage(to) && !tokenInStorage(to)) return true
-    if (privatePage(to) && !validToken()) return true
+    if (!privatePage(to)) return false
+    if (!tokenInStorage()) return true
+    if (!validToken()) return true
     return false
     
 }
@@ -34,6 +35,6 @@ function tokenInStorage() {
 }
 function validToken() {
     const token = localStorage.getItem("token")
-    return token === "chut"
+    return token === "token very secret"
 }
 export { router }
