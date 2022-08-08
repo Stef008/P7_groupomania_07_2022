@@ -1,7 +1,28 @@
 <script>
+
+function ctrlUserId(email, password){
+  console.log({email, password})
+
+  if (email !== "stef@gmail.com") throw new Error("Email is not correct")
+  if (password !== "123456") throw new Error("Password is not correct")
+
+  const token = "token very secret"
+  localStorage.setItem("token", token)
+}
+
 export default {
   name: "LoginVue",
-};
+  data(){
+  return {
+     email: "stef@gmail.com",
+     password: "123456"
+  }
+},
+  methods:{
+    ctrlUserId
+  }
+}
+
 </script>
 
 <template>
@@ -22,6 +43,7 @@ export default {
           class="form-control"
           id="floatingInput"
           placeholder="name@example.com"
+          v-model="email"
         />
         <label for="floatingInput">Email address</label>
       </div>
@@ -31,25 +53,36 @@ export default {
           class="form-control"
           id="floatingPassword"
           placeholder="Password"
+          v-model="password"
         />
         <label for="floatingPassword">Password</label>
       </div>
 
       
-      <button class="w-100 btn btn-lg btn-danger" type="submit">
-        Sign in
+      <button 
+        class="w-100 btn btn-lg btn-danger" 
+        type="submit" 
+        @click.prevent="() => ctrlUserId(this.email, this.password) ">Sign in
       </button>
-      <p class="mt-5 mb-3 text-muted">&copy; </p>
+      <p class="mt-5 mb-3 text-muted">Email: {{ email }}</p>
+      <p class="mt-5 mb-3 text-muted">Password: {{ password }}</p>
     </form>
   </main>
 </template>
 
 <style>
-
+form{
+ 
+  margin-top: 8rem;
+}
+@media(max-width: 768px) {
+  form {
+  margin-top: 10rem;
+  }}
 body {
   align-items: center;
   padding-bottom: 40px;
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
 }
 
 .form-signin {
