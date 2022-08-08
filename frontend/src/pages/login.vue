@@ -8,6 +8,7 @@ function ctrlUserId(email, password){
 
   const token = "token very secret"
   localStorage.setItem("token", token)
+  this.$router.push("/home")
 }
 
 export default {
@@ -15,26 +16,44 @@ export default {
   data(){
   return {
      email: "stef@gmail.com",
-     password: "123456"
+     password: "123456",
+     ctrlUserInvalid: false,
+     error: null
   }
 },
   methods:{
-    ctrlUserId
+    ctrlUserId,
+    formCtrl
+  },
+  watch:{
+    username(value) {
+      this.error = null
+      return value === "" ? this.formCtrl(false) : this.formCtrl(true)
+    },
+    password(value) {
+      this.error = null
+      return value === "" ? this.formCtrl(false) : this.formCtrl(true)
+    }
   }
+}
+
+function formCtrl(ctrl){
+  this.ctrlUserInvalid = !ctrl
 }
 
 </script>
 
 <template>
   <main class="form-signin w-100 m-auto">
-    <form>
+    <form :class="this.ctrlUserInvalid ? 'error form' : false">
+    
       <img
         class="mb-4 d-block mx-auto"
         src="../../assets/logo-monochrome-pink.png"
         alt=""
         width="60"
-        height="60"
-      />
+        height="60"/>
+
       <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
       <div class="form-floating mb-1">
@@ -44,9 +63,11 @@ export default {
           id="floatingInput"
           placeholder="name@example.com"
           v-model="email"
-        />
+          required="true"
+          @invalid="formCtrl"/>
         <label for="floatingInput">Email address</label>
       </div>
+      
       <div class="form-floating ">
         <input
           type="password"
@@ -54,35 +75,48 @@ export default {
           id="floatingPassword"
           placeholder="Password"
           v-model="password"
-        />
+          required="true"
+          @invalid="formCtrl"/>
         <label for="floatingPassword">Password</label>
       </div>
 
+      <div  v-if="ctrlUserInvalid" class="Error" >All fields are required</div>
+      <div  v-if="!ctrlUserInvalid && error" class="Error" >{{error}}</div>
       
       <button 
         class="w-100 btn btn-lg btn-danger" 
         type="submit" 
-        @click.prevent="() => ctrlUserId(this.email, this.password) ">Sign in
+        @click.prevent="() => ctrlUserId(this.email, this.password)"
+        :disabled="ctrlUserInvalid">Sign in
       </button>
+
       <p class="mt-5 mb-3 text-muted">Email: {{ email }}</p>
       <p class="mt-5 mb-3 text-muted">Password: {{ password }}</p>
+
     </form>
   </main>
 </template>
 
 <style>
+
+input:invalid{
+  border: 1px solid #FD2D01;
+}
+.Error {
+  color: #FD2D01;
+  margin-bottom: 1rem;;
+}
 form{
- 
   margin-top: 8rem;
 }
 @media(max-width: 768px) {
   form {
   margin-top: 10rem;
   }}
+
 body {
   align-items: center;
   padding-bottom: 40px;
-  /* background-color: #f5f5f5; */
 }
 
 .form-signin {
