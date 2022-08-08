@@ -7,8 +7,7 @@ export default {
 
 <template>
     <div class="form-floating mt-3 ">
-        <input class="form-control py-3"/>
-    </div>
+        <div contenteditable  class="form-control py-3" id="textarea"/></div>
     <div class="d-flex">
         <label for="formFile" class="btn btn-secondary mt-1">Add Image</label>
         <span class="ms-3"></span>
@@ -20,6 +19,14 @@ export default {
 </template>
 
 <style scoped>
+.form-control {
+      margin-top: 10rem;
+
+}
+@media(max-width: 768px) {
+  .form-control {
+  margin-top: 12rem;
+  }}
 .form-floating > div.form-control {  
     height: auto;
     min-height: 5rem;
