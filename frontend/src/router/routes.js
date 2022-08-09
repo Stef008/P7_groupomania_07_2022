@@ -12,17 +12,14 @@ const routes = [
 const router = createRouter({ history: createWebHistory(), routes });
 
 router.beforeEach((to, from) => {
-    
     if (needConnect(to)) {
-        return router.push("/login")
+    return router.push("/login")
     }
 })
 function needConnect(to) {
     if (!privatePage(to)) return false
     if (!tokenInStorage()) return true
-    if (!validToken()) return true
     return false
-    
 }
 
 function privatePage(to) {
@@ -33,8 +30,5 @@ function privatePage(to) {
 function tokenInStorage() {
     return localStorage.getItem("token") != null
 }
-function validToken() {
-    const token = localStorage.getItem("token")
-    return token === "token very secret"
-}
+
 export { router }

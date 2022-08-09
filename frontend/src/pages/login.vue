@@ -1,14 +1,33 @@
 <script>
+import { headers, url } from "../services/fetch"
 
-function ctrlUserId(email, password){
-  console.log({email, password})
 
-  if (email !== "stef@gmail.com") throw new Error("Email is not correct")
-  if (password !== "123456") throw new Error("Password is not correct")
-
-  const token = "token very secret"
-  localStorage.setItem("token", token)
-  this.$router.push("/home")
+function ctrlUserId(email, password, router){
+   const options ={
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email, password })
+  }
+  fetch(url + "auth/login", options)
+     .then((res) => {
+      if(res.ok)return res.json()
+      res.text().then((err) => {
+        const { error } = JSON.parse(err)
+        this.error = error
+        throw new Error(error)
+      })
+      throw new Error(JSON.stringify(res))
+    })
+    .then((res) => {
+      const token = res.token
+      localStorage.setItem("token", token)
+      this.$router.push("/home")
+    })
+    .catch((error) => {
+      console.error( error )
+    })
 }
 
 export default {
@@ -45,7 +64,7 @@ function formCtrl(ctrl){
 
 <template>
   <main class="form-signin w-100 m-auto">
-    <form :class="this.ctrlUserInvalid ? 'error form' : false">
+    <form :class="this.ctrlUserInvalid ? 'error form' : null">
     
       <img
         class="mb-4 d-block mx-auto"
@@ -81,12 +100,12 @@ function formCtrl(ctrl){
       </div>
 
       <div  v-if="ctrlUserInvalid" class="Error" >All fields are required</div>
-      <div  v-if="!ctrlUserInvalid && error" class="Error" >{{error}}</div>
+      <div  v-if="!ctrlUserInvalid && error" class="Error" >{{ error }}</div>
       
       <button 
         class="w-100 btn btn-lg btn-danger" 
         type="submit" 
-        @click.prevent="() => ctrlUserId(this.email, this.password)"
+        @click.prevent="() => ctrlUserId(this.email, this.password, this.$router)"
         :disabled="ctrlUserInvalid">Sign in
       </button>
 
