@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const token = process.env.JWT_PASSWORD;
 
@@ -6,11 +7,17 @@ const { users } = require("../dataBase/db.js");
 function userLogin(req, res) {
   const { email, password } = req.body;
   const user = getUser(email);
-  if (user == null) return res.status(404).send("User not found");
-  if (!isPasswordConfirmed(user, password))
-    return res.status(401).send({ error: "Incorrect password" });
-  const token = createToken(email);
-  res.send({ token: token, email: user.email });
+  if (user == null)
+    return res.status(404).send({ error: "User not found" });
+
+  checkPassword(user, password)
+    .then((isPasswordConfirmed) => {
+      if (!isPasswordConfirmed)
+        return res.status(401).send({ error: "Incorrect password" });
+      const token = createToken(email);
+      res.send({ token: token, email: user.email });
+    })
+    .catch((error) => res.status(500).send({ error }));
 }
 
 function createToken(email) {
@@ -23,20 +30,30 @@ function getUser(email) {
   return users.find((user) => user.email === email);
 }
 
-function isPasswordConfirmed(user, password) {
-  return user.password === password;
+function checkPassword(user, password) {
+  return bcrypt.compare(password, user.password);
 }
 
 function userSignup(req, res) {
   const { email, password, ctrlPassword } = req.body;
-    if (password !== ctrlPassword)
-      return res.status(400).send({ error: "Incorrect password" });
-    const user = getUser(email);
-    if (user != null)
-      return res.status(400).send({ error: "User already registered" });
-    users.push({ email, password });
-    res.send({ email: email, password: password, message:"user create" });
+  if (password !== ctrlPassword)
+    return res.status(400).send({ error: "Incorrect password" });
+  const user = getUser(email);
+  if (user != null) return res.status(400).send("User already registered");
+  passwordHash(password)
+    .then((hash) => {
+      userSaved({ email, password: hash });
+      res.send({ email: email });
+    })
+    .catch((error) => res.status(500).send({ error }));
 }
 
+passwordHash = (password) => {
+  return bcrypt.hash(password, 10);
+};
+
+userSaved = (user) => {
+  users.push(user);
+};
 
 module.exports = { userLogin, userSignup };
