@@ -4,7 +4,8 @@ export default{
     name: "Card",
     components: {
         Commentary,
-    }
+    },
+    props: ["user", "content", "url"]
    
 }
 
@@ -15,21 +16,20 @@ export default{
     <div class="card mb-3 mt-3 m-auto ">
         <div class="card-header ">
             <i class="bi bi-person-circle"></i>
+            <span>{{ user }}</span>
             <i class="bi bi-x-circle delete"></i>
         </div>
-        <img class="card-img-bottom" src="https://picsum.photos/400/200"/>
+        <img class="card-img-bottom" :src="url"/>
     <div class="card-body">
         <p class="card-text"></p>
-        <div class="d-flex justify-content-between " >
-            <p class="me-auto  card-text">
-                <small class="text-muted"></small> 
-            </p>
-            <button class="p-1 like">
-                <i class="bi bi-hand-thumbs-up" color="green"></i>
-            </button>
-            <button class="dislike ">
-                <i class="bi bi-hand-thumbs-down" color="red"></i>
-            </button>
+        
+        <div class="card-post d-flex justify-content-between " >
+            <div class="me-auto card-text">{{ content }}</div>
+                <i class="like bi bi-hand-thumbs-up"></i>
+                <!-- <i class="liked bi bi-hand-thumbs-up-fill"></i> -->
+                <i class="dislike bi bi-hand-thumbs-down mt-1"></i>
+                <!-- <i class="disliked bi bi-hand-thumbs-down-fill"></i> -->
+            
         </div>
         <commentary/>
         <div class="d-flex gap-3">
@@ -53,7 +53,15 @@ export default{
 </template>
 
 <style scoped>
-
+.card-post{
+    margin:1rem;
+}
+.card-text{
+    margin: rem;
+    font-weight: 500;
+    font-size: 20px;
+    color:#4E5166
+}
 @media (min-width: 768px) {
 .card {
   width: 80%;
@@ -79,26 +87,27 @@ export default{
 .delete{
     margin-left: auto;
     font-size: 1.5rem;
+    color:#4E5166
 }
 .delete:hover{
     color: #FD2D01;
 }
+.like, .liked, .dislike, .disliked {
+    font-size: 1.5rem;
+    color:#4E5166
+}
 .delete:hover, 
-.like:hover, 
+.disliked:hover, 
 .dislike:hover{
     cursor: pointer;
     transform: scale(1.3);
-}
-.like{
-    color: green;
-}
-.dislike{
     color: #FD2D01;
 }
-.like, .dislike{
-    border: none ; 
-    background-color: inherit;
-    font-size: 1.5rem;
+.liked:hover,
+.like:hover{
+    cursor: pointer;
+    transform: scale(1.3);
+    color: green;
 }
 .rounded-circle-input{
     width: 1.5rem;

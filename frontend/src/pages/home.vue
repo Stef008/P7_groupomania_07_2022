@@ -1,6 +1,7 @@
 <script>
 import AddPost from "../components/addPost.vue";
 import Card from "../layouts/card.vue";
+import { url } from "../services/fetch.js";
 
 export default {
     name: "HomeVue",
@@ -13,19 +14,48 @@ export default {
         if (token == null){
             this.$router.push("/login")
         }
+    },
+    mounted(){
+        const options = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            }
+        }
+        fetch(url + "posts", options)
+          .then(res => {
+            if(res.status === 200) { 
+              return res.json()
+            } else {
+              throw new Error ("failled to fecth posts")
+            }
+          })
+          .then((res) => {
+            const { email, posts} = res
+              this.posts = posts
+              this.email = email
+              console.log('posts', this.posts);
+          })
+          .catch((err) => console.log("err:", err));
+    },
+    data() {
+        return {
+            posts: [],
+            email: null
+        }
     }
 }
 </script>
 <template>
-    <div class="container-lg">
+    <div v-if="email" class="container-lg">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="welcome-container col-lg-12">
+                <h1 class="welcome text-center">Welcome to the blog</h1>
             </div>
         </div>
         <AddPost/>
-        <Card/>
-        <Card/>
-        <Card/>
+        <li v-for="post in posts" class="list-group-item">
+        <Card :user="post.user" :content="post.content" :url="post.url"/>
+        </li>
     </div>  
 </template>
 
@@ -33,6 +63,13 @@ export default {
 .container-lg {
     width: 75%
 }
+.welcome-container{
+    margin-top: 8rem;
+}
+@media(max-width: 768px) {
+  .welcome-container {
+  margin-top: 11rem;
+  }} 
 h1 {
     font-size: 1.2rem;
     font-weight: bold;
