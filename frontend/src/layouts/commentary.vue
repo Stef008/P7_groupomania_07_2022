@@ -1,6 +1,7 @@
 <script>
 export default {
     name:"Commentary",
+    props:["user", "content"]
 }
 </script>
 <template>
@@ -10,8 +11,8 @@ export default {
         class="card-img-top rounded-circle"
         alt="Logo"/> 
     <div class="d-flex flex-column remark  ms-3 ps-3 p-1">    
-        <p>YOYO</p>
-        <p>Whaou Super !</p>
+        <p>{{ user }}</p>
+        <p>{{ content }}</p>
     </div>
 </div>
 </template>

@@ -54,7 +54,7 @@ export default {
         </div>
         <AddPost/>
         <li v-for="post in posts" class="list-group-item">
-        <Card :user="post.user" :content="post.content" :url="post.url"/>
+        <Card :user="post.user" :content="post.content" :url="post.url" :commentarys="post.commentarys"/>
         </li>
     </div>  
 </template>

@@ -5,7 +5,7 @@ export default{
     components: {
         Commentary,
     },
-    props: ["user", "content", "url"]
+    props: ["user", "content", "url", "commentarys"]
    
 }
 
@@ -25,13 +25,14 @@ export default{
         
         <div class="card-post d-flex justify-content-between " >
             <div class="me-auto card-text">{{ content }}</div>
-                <i class="like bi bi-hand-thumbs-up"></i>
+                <i class="like bi bi-hand-thumbs-up me-1"></i>
                 <!-- <i class="liked bi bi-hand-thumbs-up-fill"></i> -->
                 <i class="dislike bi bi-hand-thumbs-down mt-1"></i>
                 <!-- <i class="disliked bi bi-hand-thumbs-down-fill"></i> -->
-            
         </div>
-        <commentary/>
+        <div v-for="commentary in commentarys">
+        <commentary :user="commentary.user" :content="commentary.content"/>
+        </div>
         <div class="d-flex gap-3">
             <img src="../../assets/logo-monochrome-black.png"
                  class="rounded-circle-input"
