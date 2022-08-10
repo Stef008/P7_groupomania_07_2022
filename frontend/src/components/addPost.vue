@@ -19,14 +19,6 @@ export default {
 </template>
 
 <style scoped>
-.form-control {
-      margin-top: 10rem;
-
-}
-@media(max-width: 768px) {
-  .form-control {
-  margin-top: 12rem;
-  }}
 .form-floating > div.form-control {  
     height: auto;
     min-height: 5rem;

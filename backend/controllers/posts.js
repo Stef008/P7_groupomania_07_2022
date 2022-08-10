@@ -1,17 +1,17 @@
 const post1 = {
   user: "stef@gmail.com",
   content: "Hello",
-  url: "http://https://picsum.photos/400/200",
+  url: "https://picsum.photos/400/200",
 };
 const post2 = {
   user: "theo@gmail.com",
   content: "C'est super",
-  url: "http://https://picsum.photos/400/200",
+  url: "https://picsum.photos/400/200",
 };
 const post3 = {
   user: "yoyo@gmail.com",
   content: "Whaouu",
-  url: "http://https://picsum.photos/400/200",
+  url: "https://picsum.photos/400/200",
 };
 
 function allPosts(req, res) {
