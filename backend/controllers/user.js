@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const token = process.env.JWT_PASSWORD;
+const secret = process.env.JWT_PASSWORD;
 
 const { users } = require("../dataBase/db.js");
 
@@ -21,7 +21,7 @@ function userLogin(req, res) {
 }
 
 function createToken(email) {
-  return jwt.sign({ email }, `${token}`, {
+  return jwt.sign({ email }, `${secret}`, {
     expiresIn: "24h",
   });
 }
