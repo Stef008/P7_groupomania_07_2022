@@ -8,6 +8,12 @@ export default {
         AddPost,
         Card
     },
+    beforeCreate() {
+        const token = localStorage.getItem("token")
+        if (token == null){
+            this.$router.push("/login")
+        }
+    }
 }
 </script>
 <template>
