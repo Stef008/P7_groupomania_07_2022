@@ -11,18 +11,21 @@ const post1 = {
   content: "Hello",
   url: "https://picsum.photos/400/200",
   commentarys: [],
+  id: 1,
 };
 const post2 = {
   user: "theo@gmail.com",
   content: "C'est super",
   url: "https://picsum.photos/400/200",
   commentarys: [commentary2],
+  id: 2,
 };
 const post3 = {
   user: "yoyo@gmail.com",
   content: "Whaouu",
   url: "https://picsum.photos/400/200",
   commentarys: [commentary1, commentary2],
+  id: 3,
 };
 const posts = [post1, post2, post3];
 
@@ -34,19 +37,15 @@ function allPosts(req, res) {
 function addPost(req, res) {
   const content = req.body.content;
   const getImage = req.file != null;
-  console.log("getImage:", getImage);
-  console.log("req.body", req.body);
   const url = getImage ? makeImageUrl(req) : null;
-  console.log("url:", url);
   const user = req.email;
   const post = {
     content,
     user,
     commentarys: [],
-    url : url,
+    url: url,
     id: posts.length + 1,
   };
-  console.log("post:", post);
   posts.unshift(post);
   res.send({ post });
 }
@@ -58,4 +57,17 @@ function makeImageUrl(req) {
   return `${protocol}://${host}/${pathImage}`;
 }
 
-module.exports = { allPosts, addPost };
+function addCommentary(req, res) {
+  const postId = req.params.id;
+  const post = posts.find((post) => post.id === postId);
+  console.log("req.body", req.body);
+  const id =
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15);
+  const user = req.email;
+  const commentaryToAdd = { id, user, content: req.body.commentary };
+  post.commentarys.push(commentaryToAdd);
+  res.send({ post });
+}
+
+module.exports = { allPosts, addPost, addCommentary };

@@ -1,12 +1,42 @@
 <script>
 import Commentary from "../layouts/commentary.vue";
+import {url, headers} from "../services/fetch.js";
+
 export default{
     name: "Card",
     components: {
         Commentary,
     },
-    props: ["user", "content", "url", "commentarys"]
-   
+    props: ["user", "content", "url", "commentarys","id"],
+    data() {
+        return {
+            newCommentary: null,
+        }
+    },
+    methods: {
+        addCommentary(e) {
+            const options = {
+                headers: {...headers, 'Content-Type': 'application/json'},
+                method: "POST",
+                body: JSON.stringify({
+                    commentary: this.newCommentary
+                })    
+            }
+            fetch(url + "posts/" + this.$props.id, options)
+              
+            .then(res => {
+                if(res.status === 200) { 
+                    return res.json()
+                    } else {
+                      throw new Error("failled to fecth posts")
+                    }
+                })  
+                .then((res) => {
+                    this.$router.go()
+                })
+                .catch((err) => console.log("err:", err))
+                },
+           }
 }
 
 </script>
@@ -19,7 +49,7 @@ export default{
             <span>{{ user }}</span>
             <i class="bi bi-x-circle delete"></i>
         </div>
-        <img class="card-img-bottom" :src="url"/>
+        <img class="card-img-bottom" v-if="url" :src="url"/>
     <div class="card-body">
         <p class="card-text"></p>
         
@@ -42,10 +72,11 @@ export default{
                    class="form-control" 
                    placeholder="Leave a comment" 
                    aria-label="Leave a comment" 
+                   v-model="newCommentary"
             >
             <button type="button" 
                     class="btn btn-secondary ms-auto rounded-pill" 
-                    >Submit
+                    @click="addCommentary">Submit
             </button>
         </div>
     </div>

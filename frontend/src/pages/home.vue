@@ -52,13 +52,16 @@ export default {
             </div>
         </div>
         <AddPost/>
+        <div v-if="posts.length === 0" class="ouups">Ouups..There are no posts !! But, you can create one</div>
         <li v-for="post in posts" class="list-group-item">
         <Card 
             :email="email"
             :user="post.user" 
             :content="post.content" 
             :url="post.url" 
-            :commentarys="post.commentarys"/>
+            :commentarys="post.commentarys"
+            :id="post.id"
+/>
         </li>
     </div>  
 </template>
