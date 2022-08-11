@@ -33,7 +33,6 @@ export default {
             const { email, posts} = res
               this.posts = posts
               this.email = email
-              console.log('posts', this.posts);
           })
           .catch((err) => console.log("err:", err));
     },
@@ -49,12 +48,17 @@ export default {
     <div v-if="email" class="container-lg">
         <div class="row">
             <div class="welcome-container col-lg-12">
-                <h1 class="welcome text-center">Welcome to the blog</h1>
+                <h1 class="welcome text-center">Welcome to the blog {{ email }}</h1>
             </div>
         </div>
         <AddPost/>
         <li v-for="post in posts" class="list-group-item">
-        <Card :user="post.user" :content="post.content" :url="post.url" :commentarys="post.commentarys"/>
+        <Card 
+            :email="email"
+            :user="post.user" 
+            :content="post.content" 
+            :url="post.url" 
+            :commentarys="post.commentarys"/>
         </li>
     </div>  
 </template>

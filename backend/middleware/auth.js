@@ -7,7 +7,6 @@ function ctrlToken(req, res, next) {
   jwt.verify(token, process.env.JWT_PASSWORD, (error, decoded) => {
     if (error) return res.status(401).send({ error: "Access Denied" });
     req.email = decoded.email;
-    console.log('decoded:', decoded.email);
     next();
   });
 }

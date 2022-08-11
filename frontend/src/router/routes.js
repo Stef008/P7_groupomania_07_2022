@@ -5,7 +5,9 @@ import HomeVue from "../pages/home.vue";
 const routes = [
     { path: "/login", component: LoginVue },
     { path: "/signup", component: LoginVue },
-    { path: "/home", component: HomeVue }
+    { path: "/home", component: HomeVue },
+    { path: "/", redirect: "/login" }
+
 ]
 
 
