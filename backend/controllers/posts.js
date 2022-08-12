@@ -60,7 +60,9 @@ function makeImageUrl(req) {
 function addCommentary(req, res) {
   const postId = req.params.id;
   const post = posts.find((post) => post.id === postId);
-  console.log("req.body", req.body);
+  if (post == null) {
+    return res.status(404).send({ error: "Post not found" });
+  }
   const id =
     Math.random().toString(36).substring(2, 15) +
     Math.random().toString(36).substring(2, 15);
@@ -70,4 +72,15 @@ function addCommentary(req, res) {
   res.send({ post });
 }
 
-module.exports = { allPosts, addPost, addCommentary };
+function deletePost(req, res) {
+  const postId = req.params.id;
+  const post = posts.find((post) => post.id === postId);
+    if (post == null) {
+    return res.status(404).send({ error: "Post not found" });
+    }
+  const index = posts.index(post);
+  posts.splice(index, 1);
+  res.send({ message: `Post ${postId} deleted`, post });
+}
+
+module.exports = { allPosts, addPost, addCommentary, deletePost };

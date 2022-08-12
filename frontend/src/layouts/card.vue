@@ -35,8 +35,28 @@ export default{
                     this.$router.go()
                 })
                 .catch((err) => console.log("err:", err))
-                },
-           }
+        },
+        deletePost(){
+            const options = {
+                headers: {...headers, 'Content-Type': 'application/json'},
+                method: "DELETE",
+            }
+            fetch(url + "posts/" + this.$props.id, options)
+                        
+            .then((res) => {
+                if (res.status === 200) {
+                    return res.json()
+                } else {
+                throw new Error("failed to delete post")  
+                }
+            })
+            .then((res) => {
+                console.log('res:', res);
+                this.$router.go()
+            })
+            .catch((error) => console.log("error:", error))
+        }
+   }
 }
 
 </script>
@@ -47,7 +67,7 @@ export default{
         <div class="card-header ">
             <i class="bi bi-person-circle"></i>
             <span>{{ user }}</span>
-            <i class="bi bi-x-circle delete"></i>
+            <i @click="deletePost" class="bi bi-x-circle delete"></i>
         </div>
         <img class="card-img-bottom" v-if="url" :src="url"/>
     <div class="card-body">
