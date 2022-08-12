@@ -32,30 +32,36 @@ export default {
           .then((res) => {
             const { email, posts} = res
               this.posts = posts
-              this.email = email
+              this.userLogged = email
           })
           .catch((err) => console.log("err:", err));
+    },
+    beforeUpdate() {
+        if (localStorage.getItem('reload')) {
+            this.$router.go()
+            localStorage.removeItem('reload');
+        }
     },
     data() {
         return {
             posts: [],
-            email: null
+            userLogged: null
         }
     }
 }
 </script>
 <template>
-    <div v-if="email" class="container-lg">
+    <div v-if="userLogged" class="container-lg">
         <div class="row">
             <div class="welcome-container col-lg-12">
-                <h1 class="welcome text-center">Welcome to the blog {{ email }}</h1>
+                <h1 class="welcome text-center">Welcome to the blog {{ userLogged }}</h1>
             </div>
         </div>
         <AddPost/>
-        <div v-if="posts.length === 0" class="ouups">Ouups..There are no posts !! But, you can create one</div>
+        <span v-if="posts.length === 0" class="ouups">Ouups..There are no posts to display !! But, you can create one.</span>
         <li v-for="post in posts" class="list-group-item">
         <Card 
-            :email="email"
+            :userLogged="userLogged"
             :user="post.user" 
             :content="post.content" 
             :url="post.url" 
@@ -67,6 +73,9 @@ export default {
 </template>
 
 <style scoped>
+.ouups {
+    color: #4E5166
+}
 .container-lg {
     width: 75%
 }

@@ -7,7 +7,7 @@ export default{
     components: {
         Commentary,
     },
-    props: ["user", "content", "url", "commentarys","id"],
+    props: ["user", "content", "url", "commentarys","id", "userLogged"],
     data() {
         return {
             newCommentary: null,
@@ -67,7 +67,7 @@ export default{
         <div class="card-header ">
             <i class="bi bi-person-circle"></i>
             <span>{{ user }}</span>
-            <i @click="deletePost" class="bi bi-x-circle delete"></i>
+            <i v-if="userLogged === user || userLogged === 'stef@gmail.com'" @click="deletePost" class="bi bi-x-circle delete"></i>
         </div>
         <img class="card-img-bottom" v-if="url" :src="url"/>
     <div class="card-body">

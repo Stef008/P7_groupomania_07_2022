@@ -52,7 +52,7 @@ export default {
         <button @click="submitPost" type="button" class="btn btn-danger mt-1 ms-auto">Add post</button>
     </div>
 
-        <hr class="dropdown-divider mt-5 mb-5"/>
+        <hr class="dropdown-divider mt-5 mb-3"/>
 </template>
 
 <style scoped>
