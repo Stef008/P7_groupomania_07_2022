@@ -1,3 +1,5 @@
+const { prisma } = require("../dataBase/db");
+
 const commentary1 = {
   user: "juju@gmail.com",
   content: "oui, j'adore !",
