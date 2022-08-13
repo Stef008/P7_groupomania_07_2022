@@ -46,10 +46,9 @@ function addPost(req, res) {
     user,
     commentarys: [],
     url: url,
-    id: posts.length + 1,
+    id: String(posts.length + 1),
   };
-  posts.unshift(post);
-  res.send({ post });
+  prisma.post.create({ data: post }).then((post) => {console.log(post)});
 }
 
 function makeImageUrl(req) {

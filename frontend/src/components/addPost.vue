@@ -42,8 +42,8 @@ export default {
 </script>
 
 <template>
-    <div class="form-floating mt-3 ">
-        <input class="form-control py-3" id="textarea" v-model="content"/>
+    <div class="form-control mt-3 ">
+        <input type="text" placeholder="Your post here" class="form-control py-3" v-model="content"/>
     </div>
     <div class="d-flex">
         <label for="formFile" class="btn btn-secondary mt-1">Add Image</label>
@@ -56,19 +56,15 @@ export default {
 </template>
 
 <style scoped>
-.form-floating > div.form-control {  
-    height: auto;
-    min-height: 5rem;
+.mt-3 {
+    border-style: none;
 }
-.form-floating > input.form-control:empty:not(:focus)::before{
-    content: "Your post here";
-    color: #4e5166;
-}
+
 hr {
     border-bottom: 1px solid #fd2d0161; 
     box-shadow: 0px 5px 15px 1px #FD2D01;
 }
-label{
+.formFile{
     display: grid;
     place-content: center;
 }
