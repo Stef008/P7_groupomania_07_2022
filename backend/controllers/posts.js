@@ -31,31 +31,62 @@ const post3 = {
 };
 const posts = [post1, post2, post3];
 
-function allPosts(req, res) {
+async function allPosts(req, res) {
   const email = req.email;
+  console.log("email:", email);
+  const posts = await prisma.post.findMany({
+    include: {
+      commentarys: {
+        orderBy: {
+          createdAt: "asc",
+        },
+        include: {
+          user: {
+            select: {
+              email: true,
+            },
+          },
+        },
+      },
+      user: {
+        select: {
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
   res.send({ posts, email });
 }
 
-function addPost(req, res) {
+async function addPost(req, res) {
   const content = req.body.content;
-  const getImage = req.file != null;
-  const url = getImage ? makeImageUrl(req) : null;
-  const user = req.email;
-  const post = {
-    content,
-    user,
-    commentarys: [],
-    url: url,
-    id: String(posts.length + 1),
-  };
-  prisma.post.create({ data: post }).then((post) => {console.log(post)});
+  const email = req.email;
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    const userId = user.id;
+    const post = { userId, content };
+    makeUrlImage(req, post);
+
+    const newPost = await prisma.post.create({ data: post });
+    res.send({ post: newPost });
+  } catch (err) {
+    res.status(500).send({ error: "a problem has occurred" });
+  }
 }
 
-function makeImageUrl(req) {
+function makeUrlImage(req, post) {
+  const hasImage = req.file != null;
+  if (!hasImage) return;
   let pathImage = req.file.path.replace("\\", "/");
   const protocol = req.protocol;
   const host = req.get("host");
-  return `${protocol}://${host}/${pathImage}`;
+  const url = `${protocol}://${host}/${pathImage}`;
+
+  post.imageUrl = url;
 }
 
 function addCommentary(req, res) {
@@ -76,9 +107,9 @@ function addCommentary(req, res) {
 function deletePost(req, res) {
   const postId = req.params.id;
   const post = posts.find((post) => post.id === postId);
-    if (post == null) {
+  if (post == null) {
     return res.status(404).send({ error: "Post not found" });
-    }
+  }
   const index = posts.index(post);
   posts.splice(index, 1);
   res.send({ message: `Post ${postId} deleted`, post });
