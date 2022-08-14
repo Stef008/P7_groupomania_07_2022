@@ -7,7 +7,7 @@ export default{
     components: {
         Commentary,
     },
-    props: ["user", "content", "url", "commentarys","id", "userLogged"],
+    props: ["user", "content", "imageUrl", "commentarys","id", "userLogged"],
     data() {
         return {
             newCommentary: null,
@@ -51,7 +51,6 @@ export default{
                 }
             })
             .then((res) => {
-                console.log('res:', res);
                 this.$router.go()
             })
             .catch((error) => console.log("error:", error))
@@ -69,7 +68,7 @@ export default{
             <span>{{ user }}</span>
             <i v-if="userLogged === user || userLogged === 'stef@gmail.com'" @click="deletePost" class="bi bi-x-circle delete"></i>
         </div>
-        <img class="card-img-bottom" v-if="url" :src="url"/>
+        <img class="card-img-bottom" v-if="imageUrl" :src="imageUrl"/>
     <div class="card-body">
         <p class="card-text"></p>
         
@@ -81,7 +80,7 @@ export default{
                 <!-- <i class="disliked bi bi-hand-thumbs-down-fill"></i> -->
         </div>
         <div v-for="commentary in commentarys">
-        <commentary :user="commentary.user" :content="commentary.content"/>
+        <commentary :user="commentary.user.email" :content="commentary.content"/>
         </div>
         <div class="d-flex gap-3">
             <img src="../../assets/logo-monochrome-black.png"

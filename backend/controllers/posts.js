@@ -1,39 +1,7 @@
 const { prisma } = require("../dataBase/db");
 
-const commentary1 = {
-  user: "juju@gmail.com",
-  content: "oui, j'adore !",
-};
-const commentary2 = {
-  user: "juju@gmail.com",
-  content: "incroyable ?",
-};
-const post1 = {
-  user: "stef@gmail.com",
-  content: "Hello",
-  url: "https://picsum.photos/400/200",
-  commentarys: [],
-  id: 1,
-};
-const post2 = {
-  user: "theo@gmail.com",
-  content: "C'est super",
-  url: "https://picsum.photos/400/200",
-  commentarys: [commentary2],
-  id: 2,
-};
-const post3 = {
-  user: "yoyo@gmail.com",
-  content: "Whaouu",
-  url: "https://picsum.photos/400/200",
-  commentarys: [commentary1, commentary2],
-  id: 3,
-};
-const posts = [post1, post2, post3];
-
 async function allPosts(req, res) {
   const email = req.email;
-  console.log("email:", email);
   const posts = await prisma.post.findMany({
     include: {
       commentarys: {
@@ -89,19 +57,22 @@ function makeUrlImage(req, post) {
   post.imageUrl = url;
 }
 
-function addCommentary(req, res) {
-  const postId = req.params.id;
-  const post = posts.find((post) => post.id === postId);
+async function addCommentary(req, res) {
+  const postId = Number(req.params.id);
+  const post = await prisma. post.findUnique({
+    where:{ id: postId }})
+    console.log('post:', post);
   if (post == null) {
     return res.status(404).send({ error: "Post not found" });
   }
-  const id =
-    Math.random().toString(36).substring(2, 15) +
-    Math.random().toString(36).substring(2, 15);
-  const user = req.email;
-  const commentaryToAdd = { id, user, content: req.body.commentary };
-  post.commentarys.push(commentaryToAdd);
-  res.send({ post });
+  const userCommentary = await prisma.user.findUnique({
+    where: { email: req.email },
+  });
+
+  const userId = userCommentary.id;
+  const commentToAdd = { userId, postId, content: req.body.commentary };
+  const commentary = await prisma.commentary.create({ data: commentToAdd });
+  res.send({ commentary })
 }
 
 function deletePost(req, res) {
