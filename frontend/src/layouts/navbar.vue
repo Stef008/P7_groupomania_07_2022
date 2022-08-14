@@ -17,7 +17,10 @@ export default{
       logout(){
         localStorage.removeItem("token")
         this.$router.go()
-    }
+      },
+      login(){
+        this.$router.go()
+      }
   }
 }  
 </script>
@@ -27,7 +30,7 @@ export default{
       <img class="bi" width="300" height="70" role="img" aria-label="" src = "../../assets/icon-left-font.png" />
         <div class="col-md-3 text-center col-12 col-md-auto mb-2 justify-content-center mb-md-0">
           <button  @click="logout" v-if = "this.ifLogged" type="button" class="btn btn-outline-danger ">logout</button>
-          <button v-if = "!this.ifLogged" type="button" class="btn btn-outline-danger  me-2">Login</button>        
+          <button @click="login" v-if = "!this.ifLogged" type="button" class="btn btn-outline-danger  me-2">Login</button>        
         </div>
     </header>
   </div>

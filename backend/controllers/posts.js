@@ -54,14 +54,15 @@ function makeUrlImage(req, post) {
   const host = req.get("host");
   const url = `${protocol}://${host}/${pathImage}`;
 
-  post.imageUrl = url;
+  post.url = url;
 }
 
 async function addCommentary(req, res) {
   const postId = Number(req.params.id);
-  const post = await prisma. post.findUnique({
-    where:{ id: postId }})
-    console.log('post:', post);
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+  });
+  console.log("post:", post);
   if (post == null) {
     return res.status(404).send({ error: "Post not found" });
   }
@@ -72,18 +73,23 @@ async function addCommentary(req, res) {
   const userId = userCommentary.id;
   const commentToAdd = { userId, postId, content: req.body.commentary };
   const commentary = await prisma.commentary.create({ data: commentToAdd });
-  res.send({ commentary })
+  res.send({ commentary });
 }
 
-function deletePost(req, res) {
-  const postId = req.params.id;
-  const post = posts.find((post) => post.id === postId);
-  if (post == null) {
-    return res.status(404).send({ error: "Post not found" });
+async function deletePost(req, res) {
+  const postId = Number(req.params.id);
+  try {
+    const post = await prisma.post.findUnique({ where: { id: postId } });
+    if (post == null) {
+      return res.status(404).send({ error: "Post not found" });
+    }
+    await prisma.commentary.deleteMany({ where: { postId } });
+    await prisma.post.delete({ where: { id: postId } });
+
+    res.send({ message: `Post ${postId} deleted`, post });
+  } catch (err) {
+    res.status(500).send({ error: "a problem has occurred" });
   }
-  const index = posts.index(post);
-  posts.splice(index, 1);
-  res.send({ message: `Post ${postId} deleted`, post });
 }
 
 module.exports = { allPosts, addPost, addCommentary, deletePost };

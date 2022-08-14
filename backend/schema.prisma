@@ -23,7 +23,7 @@ model Post {
   user        User      @relation(fields: [userId], references: [id])
   createdAt   DateTime  @default(now())
   content     String 
-  imageUrl    String?
+  url         String?
   commentarys Commentary[]
 }
 

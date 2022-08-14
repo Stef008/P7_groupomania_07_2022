@@ -13,6 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/posts", router);
+app.use("/images", express.static("images"));
 
 app.post("/auth/login", userLogin);
 app.post("/auth/signup", userSignup);

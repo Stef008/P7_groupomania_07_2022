@@ -62,7 +62,7 @@ export default {
         <li v-for="post in posts" class="list-group-item">
         <Card 
             :userLogged="userLogged"
-            :user="post.user" 
+            :user="post.user.email" 
             :content="post.content" 
             :url="post.url" 
             :commentarys="post.commentarys"
