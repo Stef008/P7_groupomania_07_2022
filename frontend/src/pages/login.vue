@@ -1,9 +1,10 @@
 <script>
 import { url, headers } from "../services/fetch"
+import axios from "axios"
 
 
 function ctrlUserId(email, password, router){
-   const options ={
+  const options ={
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -49,30 +50,26 @@ export default {
     changeForm(){
       this.loginForm = !this.loginForm
     },
-    joinUp(email, password, ctrlPassword){
-      const options ={
-        method: 'POST',
-        headers: {...headers,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-        email, 
-        password,
-        ctrlPassword
-        })
-      } 
-      fetch(url + "auth/signup", options)
-        .then((res) => {
-          if(res.status === 200) {
-            return res.json()
-          } else {
-          throw new Error ("failed to sign up")
-          }
-        })
-        .then((res) => {
-          this.$router.go()
-        })
-        .catch((error) => console.error( error ))
+  joinUp: async function(email,password, ctrlPassword, router) {
+    const body= JSON.stringify({ 
+      email, 
+      password,
+      ctrlPassword
+    })
+    const options ={
+      method: 'POST',
+      headers: {...headers,
+        'Content-Type': 'application/json',
+      }
+    } 
+    try {
+      await axios.post(url + "auth/signup", body, options)
+        this.$router.go()
+    } catch (err) {
+        const  error = err.response.data.error
+          this.error = error
+        throw new Error("Failed to signup:" + error)
+      }
     }
   },
   watch:{
@@ -97,7 +94,7 @@ function createItemForReload() {
 
 <template>
   <main class="form-signin w-100 m-auto">
-    <form :class="this.ctrlUserInvalid ? 'error form' : null">
+    <form :class="this.ctrlUserInvalid ? 'error form' : ''">
     
       <img
         class="mb-4 d-block mx-auto"
@@ -140,7 +137,7 @@ function createItemForReload() {
           class="form-control mb-1"
           id="floatingCtrlPassword"
           placeholder="Comfirm Password"
-          v-model="password"
+          v-model="ctrlPassword"
           required="true"
           @invalid="formCtrl"/>
         <label for="floatingPassword">Confirm Password</label>
@@ -167,8 +164,9 @@ function createItemForReload() {
           {{this.loginForm?"Create your account !":"Already an account ? Please logg in"}}
         </a>
       </p>
-      <p class="mt-5 mb-3 text-muted">Email: {{ email }}</p>
-      <p class="mt-5 mb-3 text-muted">Password: {{ password }}</p>
+      <p class="mt-2 mb-1 text-muted">Email: {{ email }}</p>
+      <p class="mb-1 text-muted">Password: {{ password }}</p>
+      <p class="text-muted">Confirm Password: {{ ctrlPassword }}</p>
 
     </form>
   </main>
@@ -205,13 +203,5 @@ body {
   z-index: 2;
 }
 
-.form-signin input[type="email"] {
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
 
-.form-signin input[type="password"] {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
 </style>

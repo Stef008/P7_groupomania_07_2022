@@ -7,16 +7,16 @@ const { users, prisma } = require("../dataBase/db.js");
 async function userLogin(req, res) {
   const { email, password } = req.body;
   try {
-  const user = await getUser(email);
-  if (user == null) return res.status(404).send({ error: "User not found" });
+    const user = await getUser(email);
+    if (user == null) return res.status(404).send({ error: "User not found" });
 
-  const isPasswordConfirmed = await checkPassword(user, password)
-      if (!isPasswordConfirmed) return res.status(401).send({ error: "Incorrect password" });
-      const token = createToken(email) 
-        res.send({ token: token, email: user.email })
-  }
-  catch(error) {
-     res.status(500).send({ error })
+    const isPasswordConfirmed = await checkPassword(user, password);
+    if (!isPasswordConfirmed)
+      return res.status(401).send({ error: "Incorrect password" });
+    const token = createToken(email);
+    res.send({ token: token, email: user.email });
+  } catch (error) {
+    res.status(500).send({ error });
   }
 }
 
@@ -27,7 +27,7 @@ function createToken(email) {
 }
 
 function getUser(email) {
-  return prisma.user.findUnique({ where: {email} });
+  return prisma.user.findUnique({ where: { email } });
 }
 
 function checkPassword(user, password) {
@@ -36,24 +36,29 @@ function checkPassword(user, password) {
 
 async function userSignup(req, res) {
   const { email, password, ctrlPassword } = req.body;
-  if (password !== ctrlPassword)
-    return res.status(400).send({ error: "Incorrect password" });
-  const user = getUser(email);
-  if (user != null) return res.status(400).send("User already registered");
-  passwordHash(password)
-    .then((hash) => {
-      registerUser({ email, password: hash });
-      res.send({ email: email });
-    })
-    .catch((error) => res.status(500).send({ error }));
+  try {
+    if (ctrlPassword == null) 
+      return res.status(400).send({ error: "Password not confirmed" });
+    if (password !== ctrlPassword)
+      return res.status(400).send({ error: "Incorrect password" });
+    const userRegistered = await getUser(email);
+    if (userRegistered != null)
+      return res.status(400).send("User already registered");
+
+    const hash = await passwordHash(password);
+    const user = await registerUser({ email, password: hash });
+      res.send({ user });
+  } catch (error) {
+      res.status(500).send({ error });
+  }
 }
 
 passwordHash = (password) => {
   return bcrypt.hash(password, 10);
 };
 
-userSaved = (user) => {
-  users.push(user);
+registerUser = (user) => {
+  return prisma.user.create({ data: user })
 };
 
 module.exports = { userLogin, userSignup };
