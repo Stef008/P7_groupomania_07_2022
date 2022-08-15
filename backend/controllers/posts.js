@@ -119,23 +119,3 @@ async function addLike(req, res) {
 
 module.exports = { allPosts, addPost, addCommentary, addLike, deletePost };
 
-// async function addLike(req, res) {
-//   const email = req.email;
-//   const postId = Number(req.params.id);
-//   console.log("like:", req._body);
-//   console.log("postId", postId);
-
-//   try {
-//     const user = await prisma.user.findUnique({ where: { email } });
-//     const userId = user.id;
-//     console.log("user:", userId)
-//     const userLikes = { userId, postId, liked: req._body };
-//     console.log("userLikes:", userLikes)
-
-//     const addLike =  prisma.likes.create({ data: userLikes });
-//     console.log('addLike:', addLike)
-//         res.send({ addLike });
-//   } catch (err) {
-//     res.status(500).send({ error: "a problem has occurred" });
-//   }
-// }
