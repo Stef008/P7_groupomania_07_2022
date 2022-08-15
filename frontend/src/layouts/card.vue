@@ -7,10 +7,11 @@ export default{
     components: {
         Commentary,
     },
-    props: ["user", "content", "url", "commentarys","id", "userLogged"],
+    props: ["user", "content", "url", "commentarys","id", "userLogged", "likes"],
     data() {
         return {
             newCommentary: null,
+            userLikes: false,
         }
     },
     methods: {
@@ -54,7 +55,34 @@ export default{
                 this.$router.go()
             })
             .catch((error) => console.log("error:", error))
+        },
+        userLiked(e){
+            const options = {
+                headers: {...headers, 'Content-Type': 'application/json'},
+                method: "POST",
+                body: JSON.stringify({
+                    likes: this.userLikes
+                })  
+            }
+            
+            fetch(url + "posts/" + this.$props.id + "/likes", options)
+              
+            .then(res => {
+                if(res.status === 200) { 
+                    return res.json()
+                    } else {
+                      throw new Error("failled to like posts")
+                    }
+                })
+            .then((res) => {
+                this.userLikes= true
+            })
+            .catch((err) => console.log("err:", err))
+          },
+        disableBtn(e){
+            this.userLikes = false
         }
+
    }
 }
 
@@ -74,10 +102,8 @@ export default{
         
         <div class="card-post d-flex justify-content-between " >
             <div class="me-auto card-text">{{ content }}</div>
-                <i class="like bi bi-hand-thumbs-up me-1"></i>
-                <!-- <i class="liked bi bi-hand-thumbs-up-fill"></i> -->
-                <i class="dislike bi bi-hand-thumbs-down mt-1"></i>
-                <!-- <i class="disliked bi bi-hand-thumbs-down-fill"></i> -->
+                <i @click="userLiked" v-if="!userLikes "  class="like bi bi-heart me-2"></i>
+                <i @click="disableBtn" v-if="userLikes " class="liked bi bi-heart-fill me-2"></i>          
         </div>
         <div v-for="commentary in commentarys">
         <commentary :user="commentary.user.email" :content="commentary.content"/>
@@ -135,31 +161,21 @@ export default{
     background-color: #FFD7D7;
     border-radius: 50%;
 }
-.delete{
+.delete, .like, .liked {
     margin-left: auto;
     font-size: 1.5rem;
     color:#4E5166
 }
-.delete:hover{
-    color: #FD2D01;
-}
-.like, .liked, .dislike, .disliked {
-    font-size: 1.5rem;
-    color:#4E5166
-}
 .delete:hover, 
-.disliked:hover, 
-.dislike:hover{
+.like:hover, .liked:hover{
     cursor: pointer;
     transform: scale(1.3);
     color: #FD2D01;
 }
-.liked:hover,
-.like:hover{
-    cursor: pointer;
-    transform: scale(1.3);
-    color: green;
+.liked {
+    color: #FD2D01;
 }
+
 .rounded-circle-input{
     width: 1.5rem;
     height: 1.5rem;

@@ -21,11 +21,17 @@ async function allPosts(req, res) {
           email: true,
         },
       },
+      like: {
+        select: {
+          liked: true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",
     },
   });
+  console.log("posts:", posts);
   res.send({ posts, email });
 }
 
@@ -62,7 +68,6 @@ async function addCommentary(req, res) {
   const post = await prisma.post.findUnique({
     where: { id: postId },
   });
-  console.log("post:", post);
   if (post == null) {
     return res.status(404).send({ error: "Post not found" });
   }
@@ -73,6 +78,7 @@ async function addCommentary(req, res) {
   const userId = userCommentary.id;
   const commentToAdd = { userId, postId, content: req.body.commentary };
   const commentary = await prisma.commentary.create({ data: commentToAdd });
+
   res.send({ commentary });
 }
 
@@ -83,6 +89,7 @@ async function deletePost(req, res) {
     if (post == null) {
       return res.status(404).send({ error: "Post not found" });
     }
+    await prisma.likes.deleteMany({ where: { postId } })
     await prisma.commentary.deleteMany({ where: { postId } });
     await prisma.post.delete({ where: { id: postId } });
 
@@ -92,4 +99,43 @@ async function deletePost(req, res) {
   }
 }
 
-module.exports = { allPosts, addPost, addCommentary, deletePost };
+async function addLike(req, res) {
+  const email = req.email;
+  const postId = Number(req.params.id);
+  const liked = String(req._body);
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    const userId = user.id;
+
+    const userLike = { userLikes: email, userId, postId, liked };
+    const addLike = await prisma.likes.create({ data: userLike });
+    console.log("addLike:", addLike);
+    res.send({ addLike });
+  } catch (err) {
+    res.status(500).send({ error: "a problem has occurred" });
+  }
+}
+
+module.exports = { allPosts, addPost, addCommentary, addLike, deletePost };
+
+// async function addLike(req, res) {
+//   const email = req.email;
+//   const postId = Number(req.params.id);
+//   console.log("like:", req._body);
+//   console.log("postId", postId);
+
+//   try {
+//     const user = await prisma.user.findUnique({ where: { email } });
+//     const userId = user.id;
+//     console.log("user:", userId)
+//     const userLikes = { userId, postId, liked: req._body };
+//     console.log("userLikes:", userLikes)
+
+//     const addLike =  prisma.likes.create({ data: userLikes });
+//     console.log('addLike:', addLike)
+//         res.send({ addLike });
+//   } catch (err) {
+//     res.status(500).send({ error: "a problem has occurred" });
+//   }
+// }
