@@ -75,16 +75,35 @@ export default{
                     }
                 })
             .then((res) => {
-                this.userLikes= true
+                this.userLikes = true
             })
             .catch((err) => console.log("err:", err))
           },
         disableBtn(e){
-            this.userLikes = false
-        }
-
-   }
+            const options = {
+                headers: {...headers, 'Content-Type': 'application/json'},
+                method: "DELETE",
+                body: JSON.stringify({
+                    likes: this.userLikes,
+                })    
+            }
+            fetch(url + "posts/" + this.$props.id + "/neutral", options)
+              
+            .then(res => {
+                if(res.status === 200) { 
+                    return res.json()
+                    } else {
+                      throw new Error("failled to like posts")
+                    }
+                })
+            .then((res) => {
+                this.userLikes = false
+            })
+            .catch((err) => console.log("err:", err))
+        },            
+    }
 }
+
 
 </script>
 
@@ -102,7 +121,7 @@ export default{
         
         <div class="card-post d-flex justify-content-between " >
             <div class="me-auto card-text">{{ content }}</div>
-                <i @click="userLiked" v-if="!userLikes "  class="like bi bi-heart me-2"></i>
+                <i @click="userLiked" v-if="!userLikes " class="like bi bi-heart me-2"></i>
                 <i @click="disableBtn" v-if="userLikes " class="liked bi bi-heart-fill me-2"></i>          
         </div>
         <div v-for="commentary in commentarys">

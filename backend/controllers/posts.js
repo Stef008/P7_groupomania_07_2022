@@ -24,6 +24,7 @@ async function allPosts(req, res) {
       like: {
         select: {
           liked: true,
+          id: true,
         },
       },
     },
@@ -110,12 +111,28 @@ async function addLike(req, res) {
 
     const userLike = { userLikes: email, userId, postId, liked };
     const addLike = await prisma.likes.create({ data: userLike });
-    console.log("addLike:", addLike);
     res.send({ addLike });
   } catch (err) {
     res.status(500).send({ error: "a problem has occurred" });
   }
 }
 
-module.exports = { allPosts, addPost, addCommentary, addLike, deletePost };
-
+async function deleteLike(req, res) {
+  console.log("res:", req);
+  const postId = Number(req.params.id);
+  const email = req.email;
+  try {
+    await prisma.likes.deleteMany({ where: { postId } });
+    res.send({ message: "your likes are disable" });
+  } catch (err) {
+    res.status(500).send({ error: "a problem has occurred" });
+  }
+}
+module.exports = {
+  allPosts,
+  addPost,
+  addCommentary,
+  addLike,
+  deletePost,
+  deleteLike,
+};
