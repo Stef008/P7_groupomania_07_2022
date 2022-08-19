@@ -12,8 +12,32 @@ export default{
         return {
             newCommentary: null,
             userLikes: false,
+            countLike: 0,
         }
     },
+    mounted () {
+          const options = {
+                headers: {...headers, 'Content-Type': 'application/json'},
+                method: "POST",
+            }            
+            fetch(url + "posts/" + this.$props.id + "/check", options)
+              
+            .then(res => {
+                if(res.status === 200) { 
+                    return res.json()
+                    } else {
+                      throw new Error("failled to like posts")
+                    }
+                })
+            .then((res) => {
+                if (res.data == 2)
+                this.userLikes = true
+                this.countLike = res.count
+            })
+            .catch((err) => console.log("err:", err))
+          },
+
+    
     methods: {
         addCommentary(e) {
             const options = {
@@ -60,11 +84,8 @@ export default{
             const options = {
                 headers: {...headers, 'Content-Type': 'application/json'},
                 method: "POST",
-                body: JSON.stringify({
-                    likes: this.userLikes
-                })  
             }
-            
+
             fetch(url + "posts/" + this.$props.id + "/likes", options)
               
             .then(res => {
@@ -76,28 +97,26 @@ export default{
                 })
             .then((res) => {
                 this.userLikes = true
+                this.countLike = res.count
             })
             .catch((err) => console.log("err:", err))
           },
-        disableBtn(e){
+        disableBtn(){
             const options = {
                 headers: {...headers, 'Content-Type': 'application/json'},
-                method: "DELETE",
-                body: JSON.stringify({
-                    likes: this.userLikes,
-                })    
+                method: "POST",
             }
-            fetch(url + "posts/" + this.$props.id + "/neutral", options)
-              
+            fetch(url + "posts/" + this.$props.id + "/likes", options)
             .then(res => {
                 if(res.status === 200) { 
                     return res.json()
                     } else {
-                      throw new Error("failled to like posts")
+                      throw new Error("failled to unlike posts")
                     }
                 })
             .then((res) => {
                 this.userLikes = false
+                this.countLike = res.count
             })
             .catch((err) => console.log("err:", err))
         },            
@@ -122,7 +141,8 @@ export default{
         <div class="card-post d-flex justify-content-between " >
             <div class="me-auto card-text">{{ content }}</div>
                 <i @click="userLiked" v-if="!userLikes " class="like bi bi-heart me-2"></i>
-                <i @click="disableBtn" v-if="userLikes " class="liked bi bi-heart-fill me-2"></i>          
+                <i @click="disableBtn" v-if="userLikes " class="liked bi bi-heart-fill me-2"></i>
+                <span v-if="countLike>0" class="counter mt-1">{{ countLike}}</span>          
         </div>
         <div v-for="commentary in commentarys">
         <commentary :user="commentary.user.email" :content="commentary.content"/>
@@ -199,6 +219,10 @@ export default{
     width: 1.5rem;
     height: 1.5rem;
     margin-top: 0.5rem;
+}
+.counter {
+    color: #4E5166;
+    font-size: 1rem;
 }
 
 </style>

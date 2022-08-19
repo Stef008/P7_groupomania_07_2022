@@ -15,7 +15,6 @@ model User {
   password    String 
   posts       Post[]
   commentarys Commentary[]
-  like        Likes[]
 }
 
 model Post {
@@ -25,8 +24,8 @@ model Post {
   createdAt   DateTime  @default(now())
   content     String 
   url         String?
+  liked       String?
   commentarys Commentary[]
-  like        Likes[]
 
 }
 
@@ -40,12 +39,3 @@ model Commentary {
   userId      Int 
 }
 
-model Likes {
-  id          Int       @id @default(autoincrement())
-  userId      Int   
-  user        User      @relation(fields: [userId], references: [id]) 
-  postId      Int
-  post        Post      @relation(fields: [postId], references: [id])
-  liked       String
-  userLikes   String
-}

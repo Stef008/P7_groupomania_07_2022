@@ -21,18 +21,12 @@ async function allPosts(req, res) {
           email: true,
         },
       },
-      like: {
-        select: {
-          liked: true,
-          id: true,
-        },
-      },
+   
     },
     orderBy: {
       createdAt: "desc",
     },
   });
-  console.log("posts:", posts);
   res.send({ posts, email });
 }
 
@@ -90,7 +84,7 @@ async function deletePost(req, res) {
     if (post == null) {
       return res.status(404).send({ error: "Post not found" });
     }
-    await prisma.likes.deleteMany({ where: { postId } })
+    await prisma.likes.deleteMany({ where: { postId } });
     await prisma.commentary.deleteMany({ where: { postId } });
     await prisma.post.delete({ where: { id: postId } });
 
@@ -100,39 +94,4 @@ async function deletePost(req, res) {
   }
 }
 
-async function addLike(req, res) {
-  const email = req.email;
-  const postId = Number(req.params.id);
-  const liked = String(req._body);
-
-  try {
-    const user = await prisma.user.findUnique({ where: { email } });
-    const userId = user.id;
-
-    const userLike = { userLikes: email, userId, postId, liked };
-    const addLike = await prisma.likes.create({ data: userLike });
-    res.send({ addLike });
-  } catch (err) {
-    res.status(500).send({ error: "a problem has occurred" });
-  }
-}
-
-async function deleteLike(req, res) {
-  console.log("res:", req);
-  const postId = Number(req.params.id);
-  const email = req.email;
-  try {
-    await prisma.likes.deleteMany({ where: { postId } });
-    res.send({ message: "your likes are disable" });
-  } catch (err) {
-    res.status(500).send({ error: "a problem has occurred" });
-  }
-}
-module.exports = {
-  allPosts,
-  addPost,
-  addCommentary,
-  addLike,
-  deletePost,
-  deleteLike,
-};
+module.exports = { allPosts, addPost, addCommentary, deletePost};
