@@ -4,6 +4,10 @@ Projet 7 de la formation développeur web OPENCLASSROOMS
 
 Le projet consiste à construire un réseau social interne pour les employés de Groupomania. Le but de cet outil est de faciliter les interactions entre collègues. 
 
+
+
+
+
 ### Technologies utilisées pour le backend
 
 - Node.js pour la gestion du serveur
@@ -11,7 +15,8 @@ Le projet consiste à construire un réseau social interne pour les employés de
 - JsonWebToken pour la création des tokens uniques
 - Multer pour la gestion des images
 - Bcrypt pour le hashage des mots de passe
-- Dotenv pour la création d'un fichier de configuration contenant des variables d'environnement
+- Dotenv pour la création d'un fichier de configuration contenant des variables 
+  d'environnement
 - Base de données SQL hébergé sur PlanetScale
 - Prisma comme outil ORM afin de simplifier le code
 

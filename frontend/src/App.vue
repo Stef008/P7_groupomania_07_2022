@@ -9,8 +9,10 @@ export default {
 }
 </script>
 <template>
-<Navbar/>
-<router-view/> 
+
+  <Navbar/>
+  <router-view/>
+   
 </template>
 
 <style>

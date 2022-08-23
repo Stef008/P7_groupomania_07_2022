@@ -9,6 +9,12 @@ export default {
         AddPost,
         Card
     },
+    beforeUpdate() {
+        if (localStorage.getItem('reload')) {
+            this.$router.go()
+            localStorage.removeItem('reload');
+        }
+    },
     beforeCreate() {
         const token = localStorage.getItem("token")
         if (token == null){
@@ -30,18 +36,11 @@ export default {
             }
           })
           .then((res) => {
-            const { email, posts, like} = res
+            const { email, posts} = res
               this.posts = posts
               this.userLogged = email
-              this.userLikes = like.liked
           })
           .catch((err) => console.log("err:", err));
-    },
-    beforeUpdate() {
-        if (localStorage.getItem('reload')) {
-            this.$router.go()
-            localStorage.removeItem('reload');
-        }
     },
     data() {
         return {
@@ -62,7 +61,6 @@ export default {
         <span v-if="posts.length === 0" class="ouups">Ouups..There are no posts to display !! But, you can create one.</span>
         <li v-for="post in posts" class="list-group-item">
         <Card 
-            :likes="post.like.liked"
             :userLogged="userLogged"
             :user="post.user.email" 
             :content="post.content" 

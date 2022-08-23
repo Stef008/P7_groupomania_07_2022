@@ -164,9 +164,9 @@ function createItemForReload() {
           {{this.loginForm?"Create your account !":"Already an account ? Please logg in"}}
         </a>
       </p>
-      <p class="mt-2 mb-1 text-muted">Email: {{ email }}</p>
+      <!-- <p class="mt-2 mb-1 text-muted">Email: {{ email }}</p>
       <p class="mb-1 text-muted">Password: {{ password }}</p>
-      <p class="text-muted">Confirm Password: {{ ctrlPassword }}</p>
+      <p class="text-muted">Confirm Password: {{ ctrlPassword }}</p> -->
 
     </form>
   </main>

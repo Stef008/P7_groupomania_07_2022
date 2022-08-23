@@ -4,6 +4,7 @@ export default {
     props:["user", "content"]
 }
 </script>
+
 <template>
 <div class="d-flex">
    <img
