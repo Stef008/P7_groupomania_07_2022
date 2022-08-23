@@ -25,14 +25,56 @@ async function userLiked(req, res) {
       return res.send({ message: "Post is liked", data: 1, count: 1 });
     }
     if (post != null && post.liked != null) {
-      const usersWhoLike = post.liked.split("|");
+      let usersWhoLike = post.liked.split("|");
 
       if (usersWhoLike.includes(email)) {
-        return res.send({
-          message: "post has already been liked",
-          data: 2,
-          count: usersWhoLike.length,
-        });
+        if (usersWhoLike.length == 1) {
+          console.log("=1");
+          await prisma.post.update({
+            where: {
+              id: postId,
+            },
+            data: {
+              liked: null,
+            },
+          });
+          return res.send({
+            message: "post has been disliked",
+            data: 3,
+            count: 0,
+          });
+        } else {
+          console.log(">1");
+          usersWhoLike = usersWhoLike.filter(function (item) {
+            return item !== email;
+          });
+          if (usersWhoLike.length == 1) {
+            await prisma.post.update({
+              where: {
+                id: postId,
+              },
+              data: {
+                liked: usersWhoLike[0],
+              },
+            });
+          } else {
+            let newLiked = usersWhoLike.array.join("|");
+            await prisma.post.update({
+              where: {
+                id: postId,
+              },
+              data: {
+                liked: newLiked,
+              },
+            });
+          }
+          return res.send({
+            message: "post has been disliked",
+            data: 3,
+            count: usersWhoLike.length,
+          });
+        }
+        
       } else {
         const newUsersWhoLike = post.liked + "|" + email;
         let totalCount = usersWhoLike.length + 1;
@@ -77,7 +119,7 @@ async function checkLike(req, res) {
     }
     if (post != null && post.liked != null) {
       const usersLiked = post.liked.split("|");
-     
+
       if (usersLiked.includes(email)) {
         return res.send({
           message: "Post already liked by this user",

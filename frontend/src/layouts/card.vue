@@ -30,6 +30,7 @@ export default{
                     }
                 })
             .then((res) => {
+                console.log(res);
                 if (res.data == 2)
                 this.userLikes = true
                 this.countLike = res.count
@@ -96,30 +97,14 @@ export default{
                     }
                 })
             .then((res) => {
+                console.log(res);
                 this.userLikes = true
+                if( res.data == 3) this.userLikes = false
                 this.countLike = res.count
             })
             .catch((err) => console.log("err:", err))
           },
-        disableBtn(){
-            const options = {
-                headers: {...headers, 'Content-Type': 'application/json'},
-                method: "POST",
-            }
-            fetch(url + "posts/" + this.$props.id + "/likes", options)
-            .then(res => {
-                if(res.status === 200) { 
-                    return res.json()
-                    } else {
-                      throw new Error("failled to unlike posts")
-                    }
-                })
-            .then((res) => {
-                this.userLikes = false
-                this.countLike = res.count
-            })
-            .catch((err) => console.log("err:", err))
-        },            
+           
     }
 }
 
@@ -141,7 +126,7 @@ export default{
         <div class="card-post d-flex justify-content-between " >
             <div class="me-auto card-text">{{ content }}</div>
                 <i @click="userLiked" v-if="!userLikes " class="like bi bi-heart me-2"></i>
-                <i @click="disableBtn" v-if="userLikes " class="liked bi bi-heart-fill me-2"></i>
+                <i @click="userLiked" v-if="userLikes " class="liked bi bi-heart-fill me-2"></i>
                 <span v-if="countLike>0" class="counter mt-1">{{ countLike}}</span>          
         </div>
         <div v-for="commentary in commentarys">
