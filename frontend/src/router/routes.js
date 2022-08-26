@@ -1,4 +1,6 @@
+// Import des fonctions de routeur avec vue-routeur
 import { createRouter, createWebHistory } from "vue-router";
+
 import LoginVue from "../pages/login.vue";
 import HomeVue from "../pages/home.vue";
 
@@ -10,8 +12,8 @@ const routes = [
 
 ]
 
-
 const router = createRouter({ history: createWebHistory(), routes });
+
 
 router.beforeEach((to, from) => {
     if (needConnect(to)) {

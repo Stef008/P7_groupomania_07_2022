@@ -3,7 +3,7 @@ import { url, headers } from "../services/fetch"
 import axios from "axios"
 
 
-function ctrlUserId(email, password, router){
+function userLogin(email, password){
   const options ={
     method: 'POST',
     headers: {
@@ -32,25 +32,29 @@ function ctrlUserId(email, password, router){
     })
 }
 
+function createItemForReload() {
+    localStorage.setItem("reload", Date.now());
+}
+
 export default {
   name: "LoginVue",
   data(){
   return {
-     email: "stef@gmail.com",
-     password: "123456",
-     ctrlPassword: "123456",
+     email: "",
+     password: "",
+     ctrlPassword: "",
      ctrlUserInvalid: false,
      error: null,
      loginForm: true
   }
 },
   methods:{
-    ctrlUserId,
+    userLogin,
     formCtrl,
     changeForm(){
       this.loginForm = !this.loginForm
     },
-  joinUp: async function(email,password, ctrlPassword, router) {
+  joinUp: async function(email,password, ctrlPassword) {
     const body= JSON.stringify({ 
       email, 
       password,
@@ -87,9 +91,7 @@ export default {
 function formCtrl(ctrl){
   this.ctrlUserInvalid = !ctrl
 }
-function createItemForReload() {
-    localStorage.setItem("reload", Date.now());
-}
+
 </script>
 
 <template>
@@ -149,7 +151,7 @@ function createItemForReload() {
       <button v-if="loginForm"
         class="w-100 btn btn-lg btn-danger" 
         type="submit" 
-        @click.prevent="() => ctrlUserId(this.email, this.password, this.$router)"
+        @click.prevent="() => userLogin(this.email, this.password, this.$router)"
         :disabled="ctrlUserInvalid">Sign in
       </button>
       <button v-else

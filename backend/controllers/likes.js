@@ -13,6 +13,7 @@ async function userLiked(req, res) {
     if (post == null) {
       return res.status(404).send({ error: "Post not found" });
     }
+    //Le post n'a jamais été liké
     if (post != null && post.liked == null) {
       await prisma.post.update({
         where: {
@@ -24,10 +25,12 @@ async function userLiked(req, res) {
       });
       return res.send({ message: "Post is liked", data: 1, count: 1 });
     }
+    //Le post a déjà été liké
     if (post != null && post.liked != null) {
       let usersWhoLike = post.liked.split("|");
-
+      //Le post contient l'email dans liked
       if (usersWhoLike.includes(email)) {
+        //si il n'y a qu'1 utilisateur qui a liké
         if (usersWhoLike.length == 1) {
           console.log("=1");
           await prisma.post.update({
@@ -43,6 +46,7 @@ async function userLiked(req, res) {
             data: 3,
             count: 0,
           });
+        //si plus d'un utilisateur qui a liké  
         } else {
           console.log(">1");
           usersWhoLike = usersWhoLike.filter(function (item) {
@@ -74,7 +78,6 @@ async function userLiked(req, res) {
             count: usersWhoLike.length,
           });
         }
-        
       } else {
         const newUsersWhoLike = post.liked + "|" + email;
         let totalCount = usersWhoLike.length + 1;
