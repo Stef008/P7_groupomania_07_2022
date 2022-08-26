@@ -7,7 +7,7 @@ export default{
     components: {
         Commentary,
     },
-    props: ["user", "content", "url", "commentarys","id", "userLogged", "likes"],
+    props: ["user", "content", "url", "commentarys","id", "userLogged"],
     data() {
         return {
             newCommentary: null,
