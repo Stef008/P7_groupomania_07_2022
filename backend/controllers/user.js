@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const secret = process.env.JWT_PASSWORD;
 
-const { users, prisma } = require("../dataBase/db.js");
+const { prisma } = require("../dataBase/db.js");
 
 async function userLogin(req, res) {
   const { email, password } = req.body;
@@ -37,19 +37,19 @@ function checkPassword(user, password) {
 async function userSignup(req, res) {
   const { email, password, ctrlPassword } = req.body;
   try {
-    if (ctrlPassword == null) 
+    if (ctrlPassword == null)
       return res.status(400).send({ error: "Password not confirmed" });
     if (password !== ctrlPassword)
       return res.status(400).send({ error: "Incorrect password" });
     const userRegistered = await getUser(email);
     if (userRegistered != null)
-      return res.status(400).send("User already registered");
+      return res.status(400).send({ error:"User already registered"});
 
     const hash = await passwordHash(password);
     const user = await registerUser({ email, password: hash });
-      res.send({ user });
+    res.send({ user });
   } catch (error) {
-      res.status(500).send({ error });
+    res.status(500).send({ error });
   }
 }
 
@@ -58,7 +58,7 @@ passwordHash = (password) => {
 };
 
 registerUser = (user) => {
-  return prisma.user.create({ data: user })
+  return prisma.user.create({ data: user });
 };
 
 module.exports = { userLogin, userSignup };
