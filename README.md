@@ -31,7 +31,8 @@ Le projet consiste à construire un réseau social interne pour les employés de
 2. Effectuez la commande `npm intall` dans le dossier `frontend` puis `backend` afin d'installer les dépendances
 3. Renommez les fichiers `.env.copy` en `.env`
 4. Remplissez-les avec vos variables d'environnement personnelles
-5. Exécutez la commande `npm run dev` dans le terminal côté back et, côté front
+5. Créer un dossier `images` dans votre backend.
+6. Exécutez la commande `npm run dev` dans le terminal côté back et, côté front.
 
 ### Guide d'utilisation de Prisma pour intéragir avec la base de données
 

@@ -101,7 +101,7 @@ function formCtrl(ctrl){
       <img
         class="mb-4 d-block mx-auto"
         src="../../assets/logo-monochrome-pink.png"
-        alt=""
+        alt="Logo groupomania"
         width="60"
         height="60"/>
 
