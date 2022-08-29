@@ -9,7 +9,6 @@ async function userLiked(req, res) {
         id: postId,
       },
     });
-    console.log(post);
     if (post == null) {
       return res.status(404).send({ error: "Post not found" });
     }
@@ -32,7 +31,6 @@ async function userLiked(req, res) {
       if (usersWhoLike.includes(email)) {
         //si il n'y a qu'1 utilisateur qui a liké
         if (usersWhoLike.length == 1) {
-          console.log("=1");
           await prisma.post.update({
             where: {
               id: postId,
@@ -48,7 +46,6 @@ async function userLiked(req, res) {
           });
         //si plus d'un utilisateur qui a liké  
         } else {
-          console.log(">1");
           usersWhoLike = usersWhoLike.filter(function (item) {
             return item !== email;
           });
