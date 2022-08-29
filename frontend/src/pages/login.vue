@@ -151,13 +151,13 @@ function formCtrl(ctrl){
       <button v-if="loginForm"
         class="w-100 btn btn-lg btn-danger" 
         type="submit" 
-        @click.prevent="() => userLogin(this.email, this.password, this.$router)"
+        @click.prevent="() => userLogin(this.email, this.password)"
         :disabled="ctrlUserInvalid">Sign in
       </button>
       <button v-else
         class="w-100 mt-3 btn btn-lg btn-danger" 
         type="submit" 
-        @click.prevent="() => joinUp(this.email, this.password, this.ctrlPassword, this.$router)"
+        @click.prevent="() => joinUp(this.email, this.password, this.ctrlPassword)"
         :disabled="ctrlUserInvalid">Join
       </button>      
 

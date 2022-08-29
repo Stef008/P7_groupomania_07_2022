@@ -17,7 +17,7 @@ router.get("/", allPosts);
 router.post("/", storage, addPost);
 router.post("/:id", addCommentary);
 router.post("/:id/likes", userLiked);
-router.post("/:id/check", checkLike, );
+router.post("/:id/check", checkLike);
 router.delete("/:id", deletePost);
 
 module.exports = { router };
